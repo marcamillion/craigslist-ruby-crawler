@@ -50,6 +50,11 @@ def city_list(url)
 	
 end
 
+def get_city(url)
+	uri = URI.parse(url)
+	uri.host.split('.').first
+end
+
 list = city_list(url)
 
 ## Cleaning up the final list before iterating over it.
@@ -92,53 +97,76 @@ end
 posts.reject!(&:empty?)
 
 rails_gigs = []
+rails_cities = []
 
 posts.each do |i|
 	if i[1] =~ /rails|(ruby on rails)|(ruby on rails 3)|(rails 3)|(rails 2)/i
 		rails_gigs << i
+		rails_cities << [get_city(i[2]), "rails"]		
 	end
 end
 
+a_cities = rails_cities.group_by{ |x| x[0]}.map{ |k,v| [k, v.size]}
+
 ruby_gigs = []
+ruby_cities = []
 
 posts.each do |i|
 	if i[1] =~ /ruby|(ruby 1.8.7)|(ruby 1.9.2)|(ruby 1.9.3)|ruby187|ruby192|ruby193/i
 		ruby_gigs << i
+		ruby_cities << [get_city(i[2]), "ruby"]		
 	end
 end
 
+b_cities = ruby_cities.group_by{ |x| x[0]}.map{ |k,v| [k, v.size]}
+
 python_gigs = []
+python_cities = []
 
 posts.each do |i|
 	if i[1] =~ /python|(python 3)|(python 2.7)|python3|python2/i
 		python_gigs << i
+		python_cities << [get_city(i[2]), "python"]		
 	end
 end
 
+c_cities = python_cities.group_by{ |x| x[0]}.map{ |k,v| [k, v.size]}
+
 django_gigs = []
+django_cities = []
 
 posts.each do |i|
 	if i[1] =~ /django/i
 		django_gigs << i
+		django_cities << [get_city(i[2]), "django"]				
 	end
 end
 
+d_cities = django_cities.group_by{ |x| x[0]}.map{ |k,v| [k, v.size]}
+
 php_gigs = []
+php_cities = []
 
 posts.each do |i|
 	if i[1] =~ /php|(php 5)|(php5)|php4|(php 4)/i
 		php_gigs << i
+		php_cities << [get_city(i[2]), "php"]				
 	end
 end
 
+e_cities = php_cities.group_by{ |x| x[0]}.map{ |k,v| [k, v.size]}
+
 codeigniter_gigs = []
+codeigniter_cities = []
 
 posts.each do |i|
 	if i[1] =~ /(code igniter)|codeigniter|(code igniter 2)|(codeigniter 2)|(codeigniter2)/i
 		codeigniter_gigs << i
+		codeigniter_cities << [get_city(i[2]), "codeigniter"]				
 	end
 end
 
+f_cities = codeigniter_cities.group_by{ |x| x[0]}.map{ |k,v| [k, v.size]}
 
 # This generates a basic - non-formatted - HTML file for all the Rails specific gigs in all the cities
 
@@ -146,6 +174,11 @@ builder = Nokogiri::HTML::Builder.new do |doc|
 	doc.html {
 		doc.body {
 				doc.text "Out of #{posts.count} gigs examined, there are #{rails_gigs.count} Rails gigs in #{list.count} cities."				
+				a_cities.each do |city|
+					doc.p {
+						doc.text "#{city[0]}: #{city[1]} posts"
+					}								
+				end
 	
 			rails_gigs.each do |job|
 					doc.p {
@@ -166,6 +199,11 @@ builder = Nokogiri::HTML::Builder.new do |doc|
 	doc.html {
 		doc.body {
 				doc.text "Out of #{posts.count} gigs examined, there are #{ruby_gigs.count} Ruby gigs in #{list.count} cities."				
+				b_cities.each do |city|
+					doc.p {
+						doc.text "#{city[0]}: #{city[1]} posts"
+					}								
+				end		
 	
 			ruby_gigs.each do |job|
 					doc.p {
@@ -186,6 +224,11 @@ builder = Nokogiri::HTML::Builder.new do |doc|
 	doc.html {
 		doc.body {
 				doc.text "Out of #{posts.count} gigs examined, there are #{python_gigs.count} Python gigs in #{list.count} cities."				
+				c_cities.each do |city|
+					doc.p {
+						doc.text "#{city[0]}: #{city[1]} posts"
+					}								
+				end
 	
 			python_gigs.each do |job|
 					doc.p {
@@ -206,6 +249,11 @@ builder = Nokogiri::HTML::Builder.new do |doc|
 	doc.html {
 		doc.body {
 				doc.text "Out of #{posts.count} gigs examined, there are #{django_gigs.count} Django gigs in #{list.count} cities."				
+				d_cities.each do |city|
+					doc.p {
+						doc.text "#{city[0]}: #{city[1]} posts"
+					}								
+				end
 	
 			django_gigs.each do |job|
 					doc.p {
@@ -226,6 +274,11 @@ builder = Nokogiri::HTML::Builder.new do |doc|
 	doc.html {
 		doc.body {
 				doc.text "Out of #{posts.count} gigs examined, there are #{php_gigs.count} PHP gigs in #{list.count} cities."				
+				e_cities.each do |city|
+					doc.p {
+						doc.text "#{city[0]}: #{city[1]} posts"
+					}								
+				end
 	
 			php_gigs.each do |job|
 					doc.p {
@@ -246,6 +299,11 @@ builder = Nokogiri::HTML::Builder.new do |doc|
 	doc.html {
 		doc.body {
 				doc.text "Out of #{posts.count} gigs examined, there are #{codeigniter_gigs.count} CodeIgniter gigs in #{list.count} cities."				
+				f_cities.each do |city|
+					doc.p {
+						doc.text "#{city[0]}: #{city[1]} posts"
+					}								
+				end
 	
 			codeigniter_gigs.each do |job|
 					doc.p {
