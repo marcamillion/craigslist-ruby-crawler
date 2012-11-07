@@ -49,6 +49,11 @@ def city_list(url)
 	
 end
 
+def get_city(url)
+	uri = URI.parse(url)
+	uri.host.split('.').first
+end
+
 list = city_list(url)
 
 ## Cleaning up the final list before iterating over it.
@@ -90,44 +95,68 @@ end
 posts.reject!(&:empty?)
 
 java_gigs = []
+java_cities = []
 
 posts.each do |i|
 	if i[1] =~ /java|jsp|(java-ee)|(java ee)|(java enterprise edition)|(java enterprise)|(java servlets)|(servlets)|(java jsp)/i
 		java_gigs << i
+		java_cities << [get_city(i[2]), "java"]				
 	end
 end
 
+a_cities = java_cities.group_by{ |x| x[0]}.map{ |k,v| [k, v.size]}
+
+
 perl_gigs = []
+perl_cities = []
 
 posts.each do |i|
 	if i[1] =~ /perl|(perl cgi)|(perl module)|cgi/i
 		perl_gigs << i
+		perl_cities << [get_city(i[2]), "perl"]						
 	end
 end
 
+b_cities = perl_cities.group_by{ |x| x[0]}.map{ |k,v| [k, v.size]}
+
+
 lisp_gigs = []
+lisp_cities = []
 
 posts.each do |i|
 	if i[1] =~ /lisp|(common lisp)|(common-lisp)|(scheme)|clojure/i
 		lisp_gigs << i
+		lisp_cities << [get_city(i[2]), "lisp"]								
 	end
 end
 
+c_cities = lisp_cities.group_by{ |x| x[0]}.map{ |k,v| [k, v.size]}
+
+
 dot_net_gigs = []
+dot_net_cities = []
 
 posts.each do |i|
 	if i[1] =~ /dotnet|(dot net)|(asp)|(asp.net)|(asp dot net)|(asp.net mvc)|(asp.net mvc 3)|(asp mvc)|(.net mvc)|(dot net mvc)|(dot net 4)|(.net 4)|(entity-framework)|(entity framework)/i
 		dot_net_gigs << i
+		dot_net_cities << [get_city(i[2]), "dot-net"]										
 	end
 end
 
+d_cities = dot_net_cities.group_by{ |x| x[0]}.map{ |k,v| [k, v.size]}
+
+
 c_sharp_gigs = []
+c_sharp_cities = []
 
 posts.each do |i|
 	if i[1] =~ /c#|(c#)|(c sharp)|(c-sharp)|(c-#)|(entity framework)|(entity-framework)|(vb.net)|(vb net)|(vb dot net)/i
 		c_sharp_gigs << i
+		c_sharp_cities << [get_city(i[2]), "c-sharp"]												
 	end
 end
+
+e_cities = c_sharp_cities.group_by{ |x| x[0]}.map{ |k,v| [k, v.size]}
 
 # This generates a basic - non-formatted - HTML file for all the Java specific gigs in all the cities
 
@@ -135,6 +164,11 @@ builder = Nokogiri::HTML::Builder.new do |doc|
 	doc.html {
 		doc.body {
 				doc.text "Out of #{posts.count} gigs examined, there are #{java_gigs.count} Java gigs in #{list.count} cities."				
+				a_cities.each do |city|
+					doc.p {
+						doc.text "#{city[0]}: #{city[1]} posts"
+					}								
+				end
 	
 			java_gigs.each do |job|
 					doc.p {
@@ -155,6 +189,11 @@ builder = Nokogiri::HTML::Builder.new do |doc|
 	doc.html {
 		doc.body {
 				doc.text "Out of #{posts.count} gigs examined, there are #{perl_gigs.count} Perl gigs in #{list.count} cities."				
+				b_cities.each do |city|
+					doc.p {
+						doc.text "#{city[0]}: #{city[1]} posts"
+					}								
+				end
 	
 			perl_gigs.each do |job|
 					doc.p {
@@ -175,6 +214,11 @@ builder = Nokogiri::HTML::Builder.new do |doc|
 	doc.html {
 		doc.body {
 				doc.text "Out of #{posts.count} gigs examined, there are #{lisp_gigs.count} Lisp gigs in #{list.count} cities."				
+				c_cities.each do |city|
+					doc.p {
+						doc.text "#{city[0]}: #{city[1]} posts"
+					}								
+				end
 	
 			lisp_gigs.each do |job|
 					doc.p {
@@ -195,6 +239,11 @@ builder = Nokogiri::HTML::Builder.new do |doc|
 	doc.html {
 		doc.body {
 				doc.text "Out of #{posts.count} gigs examined, there are #{dot_net_gigs.count} Dot-Net gigs in #{list.count} cities."				
+				d_cities.each do |city|
+					doc.p {
+						doc.text "#{city[0]}: #{city[1]} posts"
+					}								
+				end
 	
 			dot_net_gigs.each do |job|
 					doc.p {
@@ -215,6 +264,11 @@ builder = Nokogiri::HTML::Builder.new do |doc|
 	doc.html {
 		doc.body {
 				doc.text "Out of #{posts.count} gigs examined, there are #{c_sharp_gigs.count} C-Sharp gigs in #{list.count} cities."				
+				e_cities.each do |city|
+					doc.p {
+						doc.text "#{city[0]}: #{city[1]} posts"
+					}								
+				end
 	
 			c_sharp_gigs.each do |job|
 					doc.p {

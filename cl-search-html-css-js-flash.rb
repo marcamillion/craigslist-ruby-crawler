@@ -48,6 +48,11 @@ def city_list(url)
 	
 end
 
+def get_city(url)
+	uri = URI.parse(url)
+	uri.host.split('.').first
+end
+
 list = city_list(url)
 
 ## Cleaning up the final list before iterating over it.
@@ -90,36 +95,56 @@ end
 posts.reject!(&:empty?)
 
 html_gigs = []
+html_cities = []
 
 posts.each do |i|
 	if i[1] =~ /html|html4|html5|(html 4)|(html 5)|xml/i
 		html_gigs << i
+		html_cities << [get_city(i[2]), "html"]				## This creates an array of arrays of cities & tech
 	end
 end
 
+## This creates a summary array of all the cities & the number of posts for each city
+a_cities = html_cities.group_by{ |x| x[0]}.map{ |k,v| [k, v.size]}
+
+
 css_gigs = []
+css_cities = []
 
 posts.each do |i|
 	if i[1] =~ /css|css2|css3|(css 2)|(css 3)/i
 		css_gigs << i
+		css_cities << [get_city(i[2]), "css"]						
 	end
 end
 
+b_cities = css_cities.group_by{ |x| x[0]}.map{ |k,v| [k, v.size]}
+
+
 flash_gigs = []
+flash_cities = []
 
 posts.each do |i|
 	if i[1] =~ /flash|(flash 9)|(adobe flash)|(action script)|actionscript|(actionscript 3)|(actionscript-3)|(actionscript3)|(actionscript 2)|(action script 2)|swf|flex/i
 		flash_gigs << i
+		flash_cities << [get_city(i[2]), "flash"]								
 	end
 end
 
+c_cities = flash_cities.group_by{ |x| x[0]}.map{ |k,v| [k, v.size]}
+
+
 javascript_gigs = []
+javascript_cities = []
 
 posts.each do |i|
 	if i[1] =~ /javascript|js|jquery|prototype|(prototype js)/i
 		javascript_gigs << i
+		javascript_cities << [get_city(i[2]), "javascript"]										
 	end
 end
+
+d_cities = javascript_cities.group_by{ |x| x[0]}.map{ |k,v| [k, v.size]}
 
 # This generates a basic - non-formatted - HTML file for all the HTML specific gigs in all the cities
 
@@ -127,6 +152,11 @@ builder = Nokogiri::HTML::Builder.new do |doc|
 	doc.html {
 		doc.body {
 				doc.text "Out of #{posts.count} gigs examined, there are #{html_gigs.count} HTML gigs in #{list.count} cities."				
+				a_cities.each do |city|
+					doc.p {
+						doc.text "#{city[0]}: #{city[1]} posts"
+					}								
+				end	
 	
 			html_gigs.each do |job|
 					doc.p {
@@ -147,6 +177,11 @@ builder = Nokogiri::HTML::Builder.new do |doc|
 	doc.html {
 		doc.body {
 				doc.text "Out of #{posts.count} gigs examined, there are #{css_gigs.count} CSS gigs in #{list.count} cities."				
+				b_cities.each do |city|
+					doc.p {
+						doc.text "#{city[0]}: #{city[1]} posts"
+					}								
+				end
 	
 			css_gigs.each do |job|
 					doc.p {
@@ -167,6 +202,11 @@ builder = Nokogiri::HTML::Builder.new do |doc|
 	doc.html {
 		doc.body {
 				doc.text "Out of #{posts.count} gigs examined, there are #{flash_gigs.count} Flash gigs in #{list.count} cities."				
+				c_cities.each do |city|
+					doc.p {
+						doc.text "#{city[0]}: #{city[1]} posts"
+					}								
+				end
 	
 			flash_gigs.each do |job|
 					doc.p {
@@ -187,6 +227,11 @@ builder = Nokogiri::HTML::Builder.new do |doc|
 	doc.html {
 		doc.body {
 				doc.text "Out of #{posts.count} gigs examined, there are #{javascript_gigs.count} Javascript gigs in #{list.count} cities."				
+				d_cities.each do |city|
+					doc.p {
+						doc.text "#{city[0]}: #{city[1]} posts"
+					}								
+				end
 	
 			javascript_gigs.each do |job|
 					doc.p {

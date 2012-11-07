@@ -61,7 +61,6 @@ list = city_list(url)
 
 list.reject!(&:empty?)
 
-
 first_items = list[0..700]
 
 posts = []
