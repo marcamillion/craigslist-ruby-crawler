@@ -12,12 +12,12 @@ require 'cgi'
 
 today = Date.today.strftime("%b-%d-%Y")
 
-rails_gigs_path = "output/server-side/rails-gigs-#{today}.html"
-ruby_gigs_path = "output/server-side/ruby-gigs-#{today}.html"
-django_gigs_path = "output/server-side/django-gigs-#{today}.html"
-python_gigs_path = "output/server-side/python-gigs-#{today}.html"
-php_gigs_path = "output/server-side/php-gigs-#{today}.html"
-codeigniter_gigs_path = "output/server-side/codeigniter-gigs-#{today}.html"
+rails_gigs_path = "output/server-side/#{today}/rails-gigs-#{today}.html"
+ruby_gigs_path = "output/server-side/#{today}/ruby-gigs-#{today}.html"
+django_gigs_path = "output/server-side/#{today}/django-gigs-#{today}.html"
+python_gigs_path = "output/server-side/#{today}/python-gigs-#{today}.html"
+php_gigs_path = "output/server-side/#{today}/php-gigs-#{today}.html"
+codeigniter_gigs_path = "output/server-side/#{today}/codeigniter-gigs-#{today}.html"
 
 url = 'http://www.craigslist.org/about/sites'
 

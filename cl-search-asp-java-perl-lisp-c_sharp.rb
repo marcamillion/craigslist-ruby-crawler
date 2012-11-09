@@ -12,11 +12,11 @@ require 'cgi'
 
 today = Date.today.strftime("%b-%d-%Y")
 
-java_gigs_path = "output/server-side/java-gigs-#{today}.html"
-perl_gigs_path = "output/server-side/perl-gigs-#{today}.html"
-dot_net_gigs_path = "output/server-side/dot_net-gigs-#{today}.html"
-lisp_gigs_path = "output/server-side/lisp-gigs-#{today}.html"
-c_sharp_gigs_path = "output/server-side/c_sharp-gigs-#{today}.html"
+java_gigs_path = "output/server-side/#{today}/java-gigs-#{today}.html"
+perl_gigs_path = "output/server-side/#{today}/perl-gigs-#{today}.html"
+dot_net_gigs_path = "output/server-side/#{today}/dot_net-gigs-#{today}.html"
+lisp_gigs_path = "output/server-side/#{today}/lisp-gigs-#{today}.html"
+c_sharp_gigs_path = "output/server-side/#{today}/c_sharp-gigs-#{today}.html"
 
 url = 'http://www.craigslist.org/about/sites'
 
